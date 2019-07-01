@@ -1,0 +1,8 @@
+{:users {"s1i5fs" {:name "Peter"
+                   :location "Zurich"}}
+ :questions  {:q1 {:id "Question 1"
+                   :text "How would you describe your role?"
+                   :answers {}}
+              :q2 {:id "Question 2"
+                   :text "Which of these is your primary programming language?"
+                   :answers  {}}}}

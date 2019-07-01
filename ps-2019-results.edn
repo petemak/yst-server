@@ -1,0 +1,10 @@
+{:surveys
+ {"ps-2019" {:q1 {:id "Question 1"
+                  :text "Are you a programmer?"
+                  :answers {}}
+             :q2 {:id "Question 2"
+                  :text "Which of these areas does your daily work focus on?"
+                  :answers {}}
+             :q3 {:id "Question 3"
+                  :text "Which of these is your primary programming language?"
+                  :answers {}}}}}
