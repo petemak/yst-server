@@ -44,7 +44,10 @@
                      :answers  {}}}})
 
 
-
+;;====================================================================
+;; Question storge as in-memory database
+;;====================================================================
+(def qst-stg (atom {}))
 
 ;;====================================================================
 ;; Response database as in-memory database
@@ -61,18 +64,36 @@
 
 
 ;;====================================================================
-;; Read answer template and intialise databse
+;; Read questions template and intialise databse
 ;;====================================================================
-(defn init-db
-  "Load DB from file to intialise atom"
+(defn- init-qst-stg
+  "Load questions from file to intialise atom"
   []
-  (reset! ans-stg (read-string (slurp "ps-2019-result-template.edn"))))
+  (reset! qst-stg (read-string (slurp "question-template.edn"))))
 
+;;====================================================================
+;; Read questions template and intialise databse
+;;====================================================================
+(defn- init-ans-stg
+  "Load answer template from file to intialise atom"
+  []
+  (reset! ans-stg (read-string (slurp "answer-template.edn"))))
+
+
+;;====================================================================
+;; Intialise storage
+;;====================================================================
+(defn init-stg
+  []
+  (when (empty? @qst-stg)
+    (init-qst-stg))
+  (when (empty? @ans-stg)
+    (init-ans-stg)))
 
 ;;====================================================================
 ;; Compoent: response database
 ;;====================================================================
-(defstate resp-db :start (init-db)
+(defstate resp-db :start (init-stg)
                   :stop (save-db))
 
 
@@ -84,7 +105,9 @@
 (defn get-questions
   "Get questions for the survey"
   []
-  (:questions survey))
+  (when (empty? @qst-stg)
+    (init-qst-stg))
+  (:questions @qst-stg))
 
 
 ;;====================================================================
@@ -93,28 +116,30 @@
 
 (defn register-user
   "Register answer to quesion did of survey sid for user sid"
-  [stg uid name loc]
-  (swap! stg assoc-in [:users uid :name] name)
-  (swap! stg assoc-in [:users uid :location] loc))
+  [uid name loc]
+  (swap! ans-stg assoc-in [:users uid :name] name)
+  (swap! ans-stg assoc-in [:users uid :location] loc))
 
 
 (defn register-answer
-  "Register the answer a user chose"
-  [stg qid aid uid]
-  (swap! stg update-in [:questions qid :answers aid] (fnil conj []) uid))
+  "Register the answer a user uid"
+  [qid aid uid]
+  (when (empty? @ans-stg)
+    (init-ans-stg))
+  (swap! ans-stg update-in [:questions qid :answers aid] (fnil conj []) uid))
 
 
 ;;====================================================================
 ;; Data analsyis
 ;;====================================================================
-(defn count-elements
+(defn- count-elements
   [acc elm]
   (assoc acc (first elm) (count (second elm))))
 
 
 (defn count-votes
   "Count number of votes for the  question"
-  [stg qid]
+  [qid]
   (let [acc {}
-        answers (get-in @stg [:questions qid :answers])]
+        answers (get-in @ans-stg [:questions qid :answers])]
     (reduce count-elements acc answers)))

@@ -1,0 +1,22 @@
+{:users {"s1i5fs" {:name "Peter"
+                   :location "Zurich"}}
+ :questions  {:q1 {:id "Question 1"
+                   :text "How would you describe your role?"
+                   :answers {:a1 "Developer/Programmer"
+                             :a2 "Architect"
+                             :a3 "Business Analyst"
+                             :a4 "Project Manager"}}
+              :q2 {:id "Question 2"
+                  :text "Which of these areas does your daily work focus on?"
+                  :answers {:a1 "Front-end"
+                            :a2 "server side"
+                            :a3 "Database"}}
+              :q3 {:id "Question 3"
+                   :text "Which of these is your primary programming language?"
+                   :answers  {:a1 "JavaScript"
+                              :a2 "Java"
+                              :a3 "Scala"
+                              :a4 "Python"
+                              :a5 "Rust"
+                              :a6 "Go"
+                              :a7 "Clojure/ClojureScript"}}}}
